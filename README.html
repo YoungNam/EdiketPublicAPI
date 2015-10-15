@@ -1033,12 +1033,149 @@ Content-Type: application/json
 Authorization: &quot;api-key&quot;=&lt;API_KEY&gt;
 
 {
-  &quot;content&quot;: &quot;This is a bad writing.&quot;, *&lt;required&gt;*
+  &quot;content&quot;: &quot;This is a bad writing.&quot;, &lt;required&gt;
   &quot;message&quot;: &quot;Please turn bad into good.&quot;, &lt;optional&gt;
-  &quot;callback_url&quot;: &quot;www.my_website.com/notify/when/complete/&quot;, &lt;optional&gt;
-  &quot;meta&quot;: {
-
-  }
+  &quot;callback&quot;: &quot;www.my_website.com/notify/when/complete/&quot;, &lt;optional&gt;
+  &quot;user_id&quot;: &quot;1&quot;, &lt;optional&gt;
+  &quot;meta&quot;: {}
 }
 
-</code></pre></article></body></html>
+</code></pre>
+
+<h3 id="parameters"><a name="user-content-parameters" href="#parameters" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>content</code></td>
+<td>String</td>
+<td>Text content of bad writing. Minimum 3 words, maximum 3000 words. <strong>Required</strong></td>
+</tr>
+<tr>
+<td><code>message</code></td>
+<td>String</td>
+<td>Any additional message for Ediket editor to refer.</td>
+</tr>
+<tr>
+<td><code>callback</code></td>
+<td>String</td>
+<td>URL for Callback when request is complete. Refer to <em>callback</em> section below.</td>
+</tr>
+<tr>
+<td><code>user_id</code></td>
+<td>String</td>
+<td>The identification value of the uploader. The value must be less than or equal to 36 characters. If absent, the uploader will be considered as anonymous. Refer to <em>user</em> section below.</td>
+</tr>
+<tr>
+<td><code>meta</code></td>
+<td>Object</td>
+<td>Additional data for the request. Refer to <em>meta</em> section below.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="response"><a name="user-content-response" href="#response" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Response</h3>
+<p>This is a response after success upload.</p>
+<pre><code>HTTP/1.1 201 CREATED
+Content-Type: application/json
+Location: https://api.ediket.com/drafts/&lt;draft_id&gt;
+
+{
+  &quot;id&quot;: &quot;draft_1032D82eZvKYlo2C&quot;,
+  &quot;content&quot;: &quot;This is a bad writing.&quot;,
+  &quot;revision&quot;: &quot;This is a bad writing.&quot;,
+  &quot;final&quot;: &quot;This is a bad writing.&quot;,
+  &quot;message&quot;: &quot;Please turn bad into good.&quot;,
+  &quot;comment&quot;: null,
+  &quot;callback&quot;: &quot;www.my_website.com/notify/when/complete/&quot;,
+  &quot;user_id&quot;: &quot;1&quot;,
+  &quot;word_count&quot;: &quot;5&quot;,
+  &quot;status&quot;: &quot;waiting&quot;,
+  &quot;editor&quot;: null,
+  &quot;created_at&quot;: &quot;2015-10-16T02:37:39+00:0&quot;,
+  &quot;completed_at&quot;: null,
+}
+</code></pre>
+
+<h3 id="errors"><a name="user-content-errors" href="#errors" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Errors</h3>
+<p>If something goes wrong with the request, the response will be the following.</p>
+<pre><code>HTTP/1.1 400 BAD REQUEST
+Content-Type: application/json
+
+{
+  &quot;status&quot;: 400,
+  &quot;code&quot;: 100,
+  &quot;message&quot;: &quot;The argument is missing.&quot;,
+  &quot;field&quot;: &quot;content&quot;
+}
+</code></pre>
+
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Error</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>100</td>
+<td>The argument is missing.</td>
+<td>ex) <em>content</em> is missing.</td>
+</tr>
+<tr>
+<td>200</td>
+<td>The argument is invalid.</td>
+<td>ex) <em>user_id</em> is invalid. <em>content</em> is either too short or too long.</td>
+</tr>
+<tr>
+<td>201</td>
+<td>The account is deactivated.</td>
+<td>Please send an e-mail to <a href="mailto:contact@ediket.com">contact@ediket.com</a> for details.</td>
+</tr>
+<tr>
+<td>202</td>
+<td>The account ran out of credits.</td>
+<td>API holder must contact Ediket for payment method after the first 1000 words trial</td>
+</tr>
+<tr>
+<td>203</td>
+<td>The account exceeded request bandwidth</td>
+<td>Request word count exceeded maximum threshold. Default 100000 Words. Modify the threshold using account settings.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="callback"><a name="user-content-callback" href="#callback" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Callback</h3>
+<p>It takes about 30 minutes per page for Ediket Editor to right the wrong. After the request is complete, API User will be notified through callback url provided during request upload. Ediket API will send <strong>POST Request</strong> containing the following data.</p>
+<pre><code>{
+  &quot;id&quot;: &quot;draft_1032D82eZvKYlo2C&quot;,
+  &quot;content&quot;: &quot;This is a bad writing.&quot;,
+  &quot;revision&quot;: &quot;This is a &lt;del&gt;bad&lt;/del&gt;&lt;ins&gt;good&lt;/ins&gt; writing.&quot;,
+  &quot;final&quot;: &quot;This is a good writing.&quot;,
+  &quot;message&quot;: &quot;Please turn bad into good.&quot;,
+  &quot;comment&quot;: &quot;The bad has turned good now!&quot;,
+  &quot;callback&quot;: &quot;www.my_website.com/notify/when/complete/&quot;,
+  &quot;user_id&quot;: &quot;1&quot;,
+  &quot;word_count&quot;: &quot;5&quot;,
+  &quot;status&quot;: &quot;completed&quot;,
+  &quot;editor&quot;: {
+    &quot;id&quot;: &quot;2&quot;,
+    &quot;username&quot;: &quot;Eric the Editor&quot;,
+    &quot;career&quot;: &quot;Developer&quot;,
+    &quot;education&quot;: &quot;Rice University&quot;
+  },
+  &quot;created_at&quot;: &quot;2015-10-16T02:37:39+00:0&quot;,
+  &quot;completed_at&quot;: &quot;2015-10-16T02:50:41+00:0&quot;,
+}
+</code></pre>
+
+<h2 id="draft"><a name="user-content-draft" href="#draft" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Draft</h2>
+<h2 id="user"><a name="user-content-user" href="#user" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>User</h2>
+<h2 id="invoice"><a name="user-content-invoice" href="#invoice" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Invoice</h2>
+<h2 id="account-settings"><a name="user-content-account-settings" href="#account-settings" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Account Settings</h2></article></body></html>
