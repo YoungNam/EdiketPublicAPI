@@ -53,8 +53,8 @@ Location: https://api.ediket.com/drafts/<draft_id>
 {
   "id": "draft_1032D82eZvKYlo2C",
   "content": "This is a bad writing.",
-  "revision": "This is a bad writing.",
-  "final": "This is a bad writing.",
+  "revision": null,
+  "final": null,
   "message": "Please turn bad into good.",
   "comment": null,
   "callback": "www.my_website.com/notify/when/complete/",
@@ -116,11 +116,9 @@ It takes about 30 minutes per page for Ediket Editor to right the wrong. After t
 }
 ```
 
-## Draft
-
 ## User
 
 ## Invoice
 
-## Account Settings
 
+## API Settings
