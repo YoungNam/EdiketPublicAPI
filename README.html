@@ -1035,9 +1035,11 @@ Authorization: &quot;api-key&quot;=&lt;API_KEY&gt;
 {
   &quot;content&quot;: &quot;This is a bad writing.&quot;, &lt;required&gt;
   &quot;message&quot;: &quot;Please turn bad into good.&quot;, &lt;optional&gt;
+  &quot;purpose&quot;: &quot;academic&quot;, &lt;optional&gt;
+  &quot;type&quot;: &quot;email&quot;, &lt;optional&gt;
   &quot;callback&quot;: &quot;www.my_website.com/notify/when/complete/&quot;, &lt;optional&gt;
   &quot;user_id&quot;: &quot;1&quot;, &lt;optional&gt;
-  &quot;meta&quot;: {}
+  &quot;meta&quot;: {} &lt;optional&gt;
 }
 
 </code></pre>
@@ -1060,17 +1062,17 @@ Authorization: &quot;api-key&quot;=&lt;API_KEY&gt;
 <tr>
 <td><code>message</code></td>
 <td>String</td>
-<td>Any additional message for Ediket editor to refer.</td>
+<td>Any additional message for Ediket editor to refer during editing.</td>
 </tr>
 <tr>
 <td><code>callback</code></td>
 <td>String</td>
-<td>URL for Callback when request is complete. Refer to <em>callback</em> section below.</td>
+<td>URL for Callback when request is complete. Refer to <a href="#callback">Callback</a> below.</td>
 </tr>
 <tr>
 <td><code>user_id</code></td>
 <td>String</td>
-<td>The identification value of the uploader. The value must be less than or equal to 36 characters. If absent, the uploader will be considered as anonymous. Refer to <em>user</em> section below.</td>
+<td>The identification value of the uploader. The value must be less than or equal to 36 characters. If absent, the uploader will be considered as anonymous. Refer to <a href="#request-user">Request User</a> section below.</td>
 </tr>
 <tr>
 <td><code>meta</code></td>
@@ -1088,12 +1090,13 @@ Location: https://api.ediket.com/drafts/&lt;draft_id&gt;
 {
   &quot;id&quot;: &quot;draft_1032D82eZvKYlo2C&quot;,
   &quot;content&quot;: &quot;This is a bad writing.&quot;,
-  &quot;revision&quot;: &quot;This is a bad writing.&quot;,
-  &quot;final&quot;: &quot;This is a bad writing.&quot;,
+  &quot;revision&quot;: null,
+  &quot;final&quot;: null,
   &quot;message&quot;: &quot;Please turn bad into good.&quot;,
   &quot;comment&quot;: null,
   &quot;callback&quot;: &quot;www.my_website.com/notify/when/complete/&quot;,
   &quot;user_id&quot;: &quot;1&quot;,
+  &quot;meta&quot;: {},
   &quot;word_count&quot;: &quot;5&quot;,
   &quot;status&quot;: &quot;waiting&quot;,
   &quot;editor&quot;: null,
@@ -1162,6 +1165,7 @@ Content-Type: application/json
   &quot;comment&quot;: &quot;The bad has turned good now!&quot;,
   &quot;callback&quot;: &quot;www.my_website.com/notify/when/complete/&quot;,
   &quot;user_id&quot;: &quot;1&quot;,
+  &quot;meta&quot;: {},
   &quot;word_count&quot;: &quot;5&quot;,
   &quot;status&quot;: &quot;completed&quot;,
   &quot;editor&quot;: {
@@ -1175,7 +1179,8 @@ Content-Type: application/json
 }
 </code></pre>
 
-<h2 id="draft"><a name="user-content-draft" href="#draft" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Draft</h2>
-<h2 id="user"><a name="user-content-user" href="#user" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>User</h2>
+<h3 id="request-user"><a name="user-content-request-user" href="#request-user" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Request User</h3>
+<p>When uploading draft, API user can specify <code>user_id</code> to better organize user&rsquo;s requests. <code>user_id</code> is a unique identification value from API User&rsquo;s database with the length equal to or less than 36 characters.</p>
+<h3 id="request-meta"><a name="user-content-request-meta" href="#request-meta" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Request Meta</h3>
 <h2 id="invoice"><a name="user-content-invoice" href="#invoice" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Invoice</h2>
-<h2 id="account-settings"><a name="user-content-account-settings" href="#account-settings" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Account Settings</h2></article></body></html>
+<h2 id="api-settings"><a name="user-content-api-settings" href="#api-settings" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>API Settings</h2></article></body></html>

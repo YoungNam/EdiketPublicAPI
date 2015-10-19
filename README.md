@@ -25,9 +25,11 @@ Authorization: "api-key"=<API_KEY>
 {
   "content": "This is a bad writing.", <required>
   "message": "Please turn bad into good.", <optional>
+  "purpose": "academic", <optional>
+  "type": "email", <optional>
   "callback": "www.my_website.com/notify/when/complete/", <optional>
   "user_id": "1", <optional>
-  "meta": {}
+  "meta": {} <optional>
 }
 
 ```
@@ -37,9 +39,9 @@ Authorization: "api-key"=<API_KEY>
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | `content` | String | Text content of bad writing. Minimum 3 words, maximum 3000 words. **Required** |
-| `message` | String | Any additional message for Ediket editor to refer. |
-| `callback` | String | URL for Callback when request is complete. Refer to *callback* section below. |
-| `user_id` | String | The identification value of the uploader. The value must be less than or equal to 36 characters. If absent, the uploader will be considered as anonymous. Refer to *user* section below. |
+| `message` | String | Any additional message for Ediket editor to refer during editing. |
+| `callback` | String | URL for Callback when request is complete. Refer to [Callback](#callback) below. |
+| `user_id` | String | The identification value of the uploader. The value must be less than or equal to 36 characters. If absent, the uploader will be considered as anonymous. Refer to [Request User](#request-user) section below. |
 | `meta` | Object | Additional data for the request. Refer to *meta* section below. |
 
 ### Response
@@ -59,6 +61,7 @@ Location: https://api.ediket.com/drafts/<draft_id>
   "comment": null,
   "callback": "www.my_website.com/notify/when/complete/",
   "user_id": "1",
+  "meta": {},
   "word_count": "5",
   "status": "waiting",
   "editor": null,
@@ -103,6 +106,7 @@ It takes about 30 minutes per page for Ediket Editor to right the wrong. After t
   "comment": "The bad has turned good now!",
   "callback": "www.my_website.com/notify/when/complete/",
   "user_id": "1",
+  "meta": {},
   "word_count": "5",
   "status": "completed",
   "editor": {
@@ -116,7 +120,20 @@ It takes about 30 minutes per page for Ediket Editor to right the wrong. After t
 }
 ```
 
-## User
+### Request User
+When uploading draft, API User can specify `user_id` to better organize user's requests. `user_id` is a unique identification value from API User's database with the length equal to or less than 36 characters.
+
+### Request Meta
+API User can specify meta information describing the nature of the content. It can be any JSON Object. Here is the sample meta.
+
+```
+"meta": {
+  "purpose": "academic",
+  "type": "email"
+}
+```
+
+## DRa
 
 ## Invoice
 
