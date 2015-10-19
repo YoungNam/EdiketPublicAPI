@@ -15,7 +15,7 @@ Currently, Ediket API is available via direct contact. Send an e-mail to contact
 ## Upload Writing
 Upload your user's drafts, and get revision notifications through a callback URL you specify.
 
-```
+```json
 POST /drafts/ HTTP/1.1
 
 Host: api.ediket.com
@@ -52,7 +52,7 @@ Authorization: "api-key"=<API_KEY>
 ### Response
 This is a response after success upload.
 
-```
+```json
 HTTP/1.1 201 CREATED
 Content-Type: application/json
 Location: https://api.ediket.com/drafts/<draft_id>
@@ -78,7 +78,7 @@ Location: https://api.ediket.com/drafts/<draft_id>
 ### Errors
 If something goes wrong with the request, the response will be the following.
 
-```
+```json
 HTTP/1.1 400 BAD REQUEST
 Content-Type: application/json
 
@@ -101,7 +101,7 @@ Content-Type: application/json
 ### Callback
 It takes about 30 minutes per page for Ediket Editor to revise a draft. After the request is complete, API User will be notified through callback url provided during request upload. Ediket API will send **POST Request** containing the following data.
 
-```
+```json
 {
   "id": "draft_1032D82eZvKYlo2C",
   "content": "This is a bad writing.",
@@ -135,7 +135,7 @@ When uploading draft, API User can specify `user_id` to better organize user's r
 ### Request Meta
 API User can specify meta information describing the nature of the content. It can be any JSON Object. Note that meta data may be processed by Ediket in unbreaking ways to enhance service quality. Here is the sample meta.
 
-```
+```json
 "meta": {
   "purpose": "academic",
   "type": "email"
