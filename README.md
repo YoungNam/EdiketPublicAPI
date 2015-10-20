@@ -26,16 +26,15 @@ Authorization: "api-key"=<API_KEY>
   "content": "This is a bad writing.", <required>
   "message": "Please turn bad into good.", <optional>
   "purpose": "academic", <optional>
-  "type": "email", <optional>
+  "writing_type": "email", <optional>
   "callback": "www.my_website.com/notify/when/complete/", <optional>
   "user_id": "1", <optional>
   "meta": {}, <optional>
-  "payload": { <optional>
+  "custom_data": { <optional>
     "courseId": "BusinessWritingCourse#001",
     "lessonId": "Lesson#001",
   }
 }
-
 ```
 
 ### Parameters
@@ -140,6 +139,67 @@ API User can specify meta information describing the nature of the content. It c
   "purpose": "academic",
   "type": "email"
 }
+```
+
+## Get Drafts uploaded by a user
+Get list of drafts uploaded by a user
+
+```
+GET /users/<user_id>/drafts HTTP/1.1
+
+Host: api.ediket.com
+Content-Type: application/json
+Authorization: "api-key"=<API_KEY>
+```
+
+###Response:
+```
+[
+	{
+		 "id": "draft_1032D82eZvKYlo2C",
+		 "content": "This is a bad writing.",
+		 "revision": "This is a <del>bad</del><ins>good</ins> writing.",
+		 "final": "This is a good writing.",
+		 "message": "Please turn bad into good.",
+		 "comment": "The bad has turned good now!",
+		 "callback": "www.my_website.com/notify/when/complete/",
+		 "user_id": "1",
+		 "meta": {},
+		 "payload": {
+			"courseId": "BusinessWritingCourse#001",
+			"lessonId": "Lesson#001",
+		},
+		"word_count": "5",
+		"status": "completed",
+		"editor": {
+			"id": "2",
+			"username": "Eric the Editor",
+			"career": "Developer",
+			"education": "Rice University"
+		},
+		"created_at": "2015-10-16T02:37:39+00:0",
+		"completed_at": "2015-10-16T02:50:41+00:0",
+  },
+	{
+		 "id": "draft_QWERTY2NDWRITINGWOOTWOOT",
+		 "content": "This is a bad writing#2.",
+		 "revision": null,
+		 "final": null,
+		 "message": "Please turn bad into good boy!.",
+		 "comment": null,
+		 "callback": "www.my_website.com/notify/when/complete/",
+		 "user_id": "1",
+		 "meta": {},
+		 "payload": {
+			"courseId": "BusinessWritingCourse#003",
+			"lessonId": "Lesson#0072",
+		},
+		"word_count": "5",
+		"status": "waiting",
+		"created_at": "2015-10-16T02:37:39+00:0",
+		"completed_at": null,
+  },
+]
 ```
 
 ## API Settings, Invoices, etc:
