@@ -44,9 +44,9 @@ Authorization: "api-key"=<API_KEY>
 | `content` | String | Text content of bad writing. Minimum 3 words, maximum 3000 words. **Required** |
 | `message` | String | Any additional message for Ediket editor to refer during editing. |
 | `callback` | String | URL for Callback when request is complete. Refer to [Callback](#callback) below. |
+| `custom_data` | Object | Additional data to be pushed as-is on to your callback url. Note that this will not be processed by Ediket API |
 | `user_id` | String | The identification value of the uploader. The value must be less than or equal to 36 characters. If absent, the uploader will be considered as anonymous. Refer to [Request User](#request-user) section below. |
-| `meta` | Object | Additional data for the request. Refer to *meta* section below. |
-| `payload` | Object | Additional data to be pushed as-is on to your callback url. Note that this will not be processed by Ediket API |
+
 
 ### Response
 This is a response after success upload.
@@ -65,7 +65,10 @@ Location: https://api.ediket.com/drafts/<draft_id>
   "comment": null,
   "callback": "www.my_website.com/notify/when/complete/",
   "user_id": "1",
-  "meta": {},
+  "custom_data": {
+  	"courseId": "BusinessWritingCourse#001",
+    "lessonId": "Lesson#001",
+  },
   "word_count": "5",
   "status": "waiting",
   "editor": null,
@@ -130,16 +133,6 @@ It takes about 30 minutes per page for Ediket Editor to revise a draft. After th
 
 ### Request User
 When uploading draft, API User can specify `user_id` to better organize user's requests. `user_id` is a unique identification value from API User's database with the length equal to or less than 36 characters.
-
-### Request Meta
-API User can specify meta information describing the nature of the content. It can be any JSON Object. Note that meta data may be processed by Ediket in unbreaking ways to enhance service quality. Here is the sample meta.
-
-```
-"meta": {
-  "purpose": "academic",
-  "type": "email"
-}
-```
 
 ## Get Drafts uploaded by a user
 Get list of drafts uploaded by a user
