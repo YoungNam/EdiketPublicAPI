@@ -1,0 +1,35 @@
+{
+  "private": true,
+  "engines": {
+    "node": "4.2.1",
+    "npm": "3.3.8"
+  },
+  "name": "ediket-public-api",
+  "version": "1.0.0",
+  "description": "Ediket Public API - Bad writing goes in, good writing comes out",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "babel-node server/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ediket/EdiketPublicAPI.git"
+  },
+  "author": "Jungwoo Lee",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ediket/EdiketPublicAPI/issues"
+  },
+  "homepage": "https://github.com/ediket/EdiketPublicAPI#readme",
+  "dependencies": {
+    "express": "^4.13.3"
+  },
+  "devDependencies": {
+    "babel": "^6.1.18",
+    "babel-core": "^6.2.1",
+    "babel-eslint": "^4.1.6",
+    "eslint": "^1.10.3",
+    "eslint-config-airbnb": "^1.0.2",
+    "eslint-plugin-react": "^3.11.2"
+  }
+}

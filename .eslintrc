@@ -1,0 +1,14 @@
+{
+  "extends": "airbnb",
+  "parser": "babel-eslint",
+  "globals": {
+    "__DEV__": true,
+  },
+  "rules": {
+    "max-len": [1, 80, 4],
+    "no-shadow": 1,
+    "no-nested-ternary": 1,
+    "new-cap": 1,
+    "guard-for-in": 1,
+  },
+}
