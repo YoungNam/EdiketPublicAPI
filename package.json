@@ -7,9 +7,9 @@
   "name": "ediket-public-api",
   "version": "1.0.0",
   "description": "Ediket Public API - Bad writing goes in, good writing comes out",
-  "main": "server/index.js",
+  "main": "lib/server.js",
   "scripts": {
-    "server": "babel-node server/index.js",
+    "server": "nodemon --exec babel-node --stage 0 lib/server.js",
     "test": "$(npm bin)/mocha --recursive test"
   },
   "repository": {
@@ -24,7 +24,9 @@
   "homepage": "https://github.com/ediket/EdiketPublicAPI#readme",
   "dependencies": {
     "body-parser": "^1.14.1",
-    "express": "^4.13.3"
+    "express": "^4.13.3",
+    "lodash": "^3.10.1",
+    "needle": "^0.11.0"
   },
   "devDependencies": {
     "babel": "^6.1.18",
@@ -34,6 +36,7 @@
     "eslint": "^1.10.3",
     "eslint-config-airbnb": "^1.0.2",
     "eslint-plugin-react": "^3.11.2",
+    "joi": "^7.0.1",
     "mocha": "^2.3.4",
     "superagent": "^1.4.0"
   }
