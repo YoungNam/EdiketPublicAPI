@@ -5,7 +5,7 @@ Draft is a proofreading request that contains original writing, revision, and ed
 | Name | Request |
 | ---- | ------- |
 | [Create a draft](#create-a-draft) | `POST` https://api.ediket.com/drafts/ |
-| [Retrieve a draft detail](#retrieve-a-draft-detail) | `GET` https://api.ediket.com/drafts/<draft_id>/ |
+| [Retrieve a draft detail](#retrieve-a-draft-detail) | `GET` https://api.ediket.com/drafts/`<draft_id>`/ |
 | [List drafts](#list-drafts) | `GET` https://api.ediket.com/drafts/ |
 
 ## Attributes
@@ -227,68 +227,3 @@ GET https://api.ediket.com/drafts/
 | client_id | String | Sort by client id
 | offset | Number | A pagination offset. <br/><br/>Default: 0 |
 | limit | Number | A pagination limit. <br/><br/>Default: 10 |
-
-### Examples
-
-```
-GET /drafts/
-
-Host: api.ediket.com
-Content-Type: application/json
-Authorization: "api-key"=<API_KEY>
-
-{
-  "data": [{
-    "id": "draft_10",
-    ... (Rest of the attributes)
-  }, {
-    "id": "draft_9",
-    ...
-  }, {
-    "id": "draft_8",
-    ...
-  }, {
-    "id": "draft_7",
-    ...
-  }, {
-    "id": "draft_6",
-    ...
-  }, {
-    "id": "draft_5",
-    ...
-  }, {
-    "id": "draft_4",
-    ...
-  }, {
-    "id": "draft_3",
-    ...
-  }, {
-    "id": "draft_2",
-    ...
-  }, {
-    "id": "draft_1",
-    ...
-  }],
-}
-```
-
-```
-GET /drafts/?limit=3,before=draft_3
-
-Host: api.ediket.com
-Content-Type: application/json
-Authorization: "api-key"=<API_KEY>
-
-{
-  "data": [{
-    "id": "draft_6",
-    ...
-  }, {
-    "id": "draft_5",
-    ...
-  }, {
-    "id": "draft_4",
-    ...
-  }],
-}
-```
