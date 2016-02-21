@@ -5,7 +5,7 @@ Draft is a proofreading request that contains original writing, revision, and ed
 | Name | Request |
 | ---- | ------- |
 | [Create a draft](#create-a-draft) | `POST` https://api.ediket.com/drafts/ |
-| [Retrieve a draft detail](#retrieve-a-draft-detail) | `GET` https://api.ediket.com/drafts/`<draft_id>`/ |
+| [Retrieve a draft detail](#retrieve-a-draft-detail) | `GET` https://api.ediket.com/drafts/[draft_id]/ |
 | [List drafts](#list-drafts) | `GET` https://api.ediket.com/drafts/ |
 
 ## Attributes
