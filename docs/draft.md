@@ -1,28 +1,35 @@
 # Draft Object
 Draft is a proofreading request that contains original writing, revision, and editor info. The term `request` and `draft` are interchangeable.
 
+## Endpoints
+| Name | Request |
+| ---- | ------- |
+| [Create a draft](#create-a-draft) | `POST` https://api.ediket.com/drafts/ |
+| [Retrieve a draft detail](#retrieve-a-draft-detail) | `GET` https://api.ediket.com/drafts/<draft_id>/ |
+| [List drafts](#list-drafts) | `GET` https://api.ediket.com/drafts/ |
+
 ## Attributes
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | `id` | String | |
 | `type` | String | "draft" |
-| `content` | String | Parsed content of uploaded writing. |
-| `message` | String | Additional message uploaded during request. |
-| `category_purpose` | String | Purpose of the writing specified during request. See [Category](#category). |
-| `category_type` | String | Type of the writing specified during request. See [Category](#category). |
-| `callback` | String | URL for Callback when request is complete. |
-| `user_id` | String | The identification value of the uploader. Max 36 characters. If absent, the uploader will be anonymous. |
-| `custom_data` | Object | Additional custom data |
+| `content` | String | The bad writing you want proofread. Minimum 3 words, maximum 3000 words. The text is parsed before uploaded. See [Parse Content](#parse-content). <br/><br/>**This is the only required field.** |
+| `title` | String | Title of the request. It's not visible to the Ediket Editor. If absent, uses first 200 characters of the `content`. |
+| `message` | String | Any additional message for Ediket editor to refer during editing. <br/><br/>Default: `Please ensure zero grammatical errors and style inconsistency.`|
+| `category_purpose` | String | Purpose of the writing. See [Category](#category). |
+| `category_type` | String | Type of the writing. See [Category](#category). |
+| `callback_url` | String | URL for Callback when request is complete. |
+| `client_id` | String | The identification value of the client. |
+| `email` | String | Email is used for notification and authentication for accessing the complete request. |
+| `custom_data` | Object | Additional custom data. It's serialized in our database. |
 | `word_count` | Number | Number of word count. **Determines the pricing.** |
 | `created_at` | Number | Created at timestamp in unix epoch |
-| `estimated_time` | Number | Number of estimated **minutes** for completion. |
 | `status` | String | Status of the request. See [Status](#status). |
 | `revision` | String | Revised content with track changes. Only available after `pending` status. `null` before `pending`. See [Revision](#revision). *(TODO: Display incomplete progress at `editing`)* |
-| `final` | String | Revised content in final form. Only available after `pending` status. `null` before `pending`. See [Revision](#revision). *(TODO: Display incomplete progress at `editing`)* |
 | `comment` | String | Comment left by editor. `null` before `pending`. |
-| `editor` | Object | A brief profile of the editor. `null` before `editing`. See [Editor](#editor). |
 | `completed_at` | Number | Revision completed at timestamp in unix epoch |
+| `editor` | Object | A brief profile of the editor. `null` before `editing`. See [Editor](#editor). |
 
 ### Category
 All drafts are categorized by their purpose and type. There are three defined purposes and each purpose comes with different types.
@@ -65,18 +72,10 @@ Since Ediket provides human proofreading, the editing can take up to 30 minutes 
 - `rejected`: The request contains inappropriate content or language to proofread.
 
 ### Revision
-Revised content comes in two forms: `revision` and `final`.
-
 `revision` is revised content in track change format. It consists of `<del>` and `<ins>` tags to display which part is deleted and which part is inserted.
 
 ```html
 This is a <del>bad</del><ins>good</ins> writing.
-```
-
-`final` is revised content in final form.
-
-```html
-This is a good writing.
 ```
 
 ### Editor
@@ -88,6 +87,7 @@ Our awesome editors will bring the good out of your bad writing.
 | education | String | Editor's education in one sentence. ex) George Washington University Law School |
 | career | String | Editor's career in one sentence. ex) Consultant / PricewaterhouseCoopers |
 | biography | String | Editor's lengthy biography. |
+| picture_url | String | Img URL to editor's portrait |
 | profile_url | String | Editor's profile page that contains detailed bio. ex) https://ediket.com/profile/6925d83a/ |
 
 ## Create a draft
@@ -103,15 +103,17 @@ POST /drafts/ HTTP/1.1
 
 Host: api.ediket.com
 Content-Type: application/json
-Authorization: "api-key"=<API_KEY>
+Authorization: Bearer <TOKEN>
 
 {
   "content": "This is a bad writing.",
+  "title": "My Proofreading Request",
   "message": "Please turn bad into good.",
   "category_purpose": "academic",
   "category_type": "email",
-  "callback": "my_website.com/notify/when/complete/",
-  "user_id": "1",
+  "callback_url": "my_website.com/notify/when/complete/",
+  "client_id": "120140129",
+  "email": "contact@ediket.com",
   "custom_data": {
     "courseId": "BusinessWritingCourse#001",
     "lessonId": "Lesson#001",
@@ -127,8 +129,7 @@ Authorization: "api-key"=<API_KEY>
 | `message` | String | Any additional message for Ediket editor to refer during editing. |
 | `category_purpose` | String | Purpose of the writing. See [Draft Documentation Page](/docs/draft.md) for possible options. Default: `business` |
 | `category_type` | String | Type of the writing. See [Draft Documentation Page](/docs/draft.md) for possible options. Default: `others` |
-| `callback` | String | URL for Callback when request is complete. See [Callback](#callback). |
-| `user_id` | String | The identification value of the uploader. Max 36 characters. If absent, the uploader will be anonymous. See [Request User](#request-user). |
+| `callback_url` | String | URL for Callback when request is complete. See [Callback](#callback). |
 | `custom_data` | Object | Additional custom data |
 
 ### Response
@@ -140,27 +141,27 @@ Content-Type: application/json
 
 {
   "data": {
-    "id": "draft_1032D82eZvKYlo2C",
+    "id": "09810def-5ece-44a8-97e3-6a1c748eea62",
     "type": "draft",
     "content": "This is a bad writing.",
+    "title": "This is my request.",
     "message": "Please turn bad into good.",
     "category_purpose": "academic",
     "category_type": "email",
-    "callback": "my_website.com/notify/when/complete/",
-    "user_id": "1",
+    "callback_url": "my_website.com/notify/when/complete/",
+    "word_count": "5",
+    "status": "waiting",
+    "client_id": "120140129",
+    "email": "contact@ediket.com",
     "custom_data": {
       "courseId": "BusinessWritingCourse#001",
       "lessonId": "Lesson#001",
     },
-    "word_count": "5",
-    "created_at": 1453880841,
-    "estimated_time": 3,
-    "status": "waiting",
+    "created_at": 1455977769,
     "revision": null,
-    "final": null,
     "comment": null,
-    "editor": null,
     "completed_at": null,
+    "editor": null
   }
 }
 ```
@@ -173,33 +174,34 @@ Content-Type: application/json
 
 {
   "data": {
-    "id": "draft_1032D82eZvKYlo2C",
+    "id": "6d29f9d3-b137-4212-8547-2db8be7c354c",
     "type": "draft",
     "content": "This is a bad writing.",
+    "title": "This is my request.",
     "message": "Please turn bad into good.",
     "category_purpose": "academic",
     "category_type": "email",
-    "callback": "my_website.com/notify/when/complete/",
-    "user_id": "1",
+    "callback_url": "my_website.com/notify/when/complete/",
+    "word_count": "5",
+    "status": "pending",
+    "client_id": "120140129",
+    "email": "contact@ediket.com",
     "custom_data": {
       "courseId": "BusinessWritingCourse#001",
       "lessonId": "Lesson#001",
     },
-    "word_count": "5",
     "created_at": 1453880841,
-    "estimated_time": 3,
-    "status": "pending",
     "revision": "This is a <del>bad</del><ins>good</ins> writing.",
-    "final": "This is a good writing.",
     "comment": "It has now become a great writing!",
-    "editor": {
-      "username": "Barrett",
-      "education": "George Washington University Law School",
-      "career": "Consultant / PricewaterhouseCoopers",
-      "biography": "...",
-      "profile_url": "https://ediket.com/profile/6925d83a/"
-    },
     "completed_at": 1453881841,
+    "editor": {
+      "username": "Eric the Fullstack",
+      "education": "Rice University",
+      "career": "CTO / Ediket",
+      "biography": "...",
+      "picture_url": "https://i.imgur.com/5ZFgenL.png",
+      "profile_url": "https://ediket.com/profile/ericfullstack"
+    }
   }
 }
 ```
@@ -222,10 +224,9 @@ GET https://api.ediket.com/drafts/
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| user_id | String | Specify user_id to fetch drafts uploaded by the user. Use `0` to fetch requests uploaded as anonymous. |
-| limit | Number | A limit on the number of drafts to be returned. Limit can range from 1-100. Default: 10 |
-| before | String | Optional argument for pagination. If you fetched 10 drafts starting with id `obj_draft`, include `?before=obj_draft` to fetch previous page on the list. Do not use this with `after`. |
-| after | String | Optional argument for pagination. If you fetched 10 drafts ending with id `obj_draft`, include `?after=obj_draft` to fetch next page on the list Do not use this with `before`. |
+| client_id | String | Sort by client id
+| offset | Number | A pagination offset. <br/><br/>Default: 0 |
+| limit | Number | A pagination limit. <br/><br/>Default: 10 |
 
 ### Examples
 
