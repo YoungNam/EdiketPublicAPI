@@ -20,12 +20,12 @@ Draft is a proofreading request that contains original writing, revision, and ed
 | `category_purpose` | String | Purpose of the writing. See [Category](#category). |
 | `category_type` | String | Type of the writing. See [Category](#category). |
 | `callback_url` | String | URL for Callback when request is complete. |
-| `user_id` | String | The identification value of the user. |
-| `email` | String | Email is used for notification and authentication for accessing the complete request. |
-| `custom_data` | Object | Additional custom data. It's serialized in our database. |
 | `word_count` | Number | Number of word count. **Determines the pricing.** |
-| `created_at` | Number | Created at timestamp in unix epoch |
 | `status` | String | Status of the request. See [Status](#status). |
+| `custom_data` | Object | Additional custom data. It's serialized in our database. |
+| `user` | Object | User object registered to the api. Consists of `id` and `email` |
+| `callback_email` | String | Email is used for notification. Not necessarily equal to `email` in `user`. |
+| `created_at` | Number | Created at timestamp in unix epoch |
 | `revision` | String | Revised content with track changes. Only available after `pending` status. `null` before `pending`. See [Revision](#revision). *(TODO: Display incomplete progress at `editing`)* |
 | `comment` | String | Comment left by editor. `null` before `pending`. |
 | `completed_at` | Number | Revision completed at timestamp in unix epoch |
@@ -114,6 +114,7 @@ Authorization: Bearer <TOKEN>
   "callback_url": "my_website.com/notify/when/complete/",
   "user_id": "120140129",
   "email": "contact@ediket.com",
+  "send_email": true,
   "custom_data": {
     "courseId": "BusinessWritingCourse#001",
     "lessonId": "Lesson#001",
@@ -151,12 +152,15 @@ Content-Type: application/json
     "callback_url": "my_website.com/notify/when/complete/",
     "word_count": "5",
     "status": "waiting",
-    "user_id": "120140129",
-    "email": "contact@ediket.com",
     "custom_data": {
       "courseId": "BusinessWritingCourse#001",
       "lessonId": "Lesson#001",
     },
+    "user": {
+      "id": "120140129",
+      "email": "contact@ediket.com"
+    },
+    "callback_email": "contact@ediket.com",
     "created_at": 1455977769,
     "revision": null,
     "comment": null,
@@ -184,12 +188,15 @@ Content-Type: application/json
     "callback_url": "my_website.com/notify/when/complete/",
     "word_count": "5",
     "status": "pending",
-    "user_id": "120140129",
-    "email": "contact@ediket.com",
     "custom_data": {
       "courseId": "BusinessWritingCourse#001",
       "lessonId": "Lesson#001",
     },
+    "user": {
+      "id": "120140129",
+      "email": "contact@ediket.com"
+    },
+    "callback_email": "contact@ediket.com",
     "created_at": 1453880841,
     "revision": "This is a <del>bad</del><ins>good</ins> writing.",
     "comment": "It has now become a great writing!",

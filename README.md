@@ -58,7 +58,7 @@ Authorization: Bearer <TOKEN>
 
 
 ### Response
-This is a sample response on successful upload. For details of draft data, go to [Draft Documentation](/docs/draft.md).
+This is a sample response on successful upload. For details of draft data, go to [Draft Documentation](/docs/draft.md). **Beware that Draft request parameters and Draft Response aren't exactly the same.**
 
 ```
 HTTP/1.1 201 CREATED
@@ -76,13 +76,15 @@ Content-Type: application/json
     "callback_url": "my_website.com/notify/when/complete/",
     "word_count": "5",
     "status": "waiting",
-    "user_id": "120140129",
-    "email": "contact@ediket.com",
-    "send_email": true,
     "custom_data": {
       "courseId": "BusinessWritingCourse#001",
       "lessonId": "Lesson#001",
     },
+    "user": {
+      "id": "120140129",
+      "email": "contact@ediket.com"
+    },
+    "callback_email": "contact@ediket.com",
     "created_at": 1455977769,
     "revision": null,
     "comment": null,
@@ -110,13 +112,15 @@ Content-Type: application/json
     "callback_url": "my_website.com/notify/when/complete/",
     "word_count": "5",
     "status": "pending",
-    "user_id": "120140129",
-    "email": "contact@ediket.com",
-    "send_email": true,
     "custom_data": {
       "courseId": "BusinessWritingCourse#001",
       "lessonId": "Lesson#001",
     },
+    "user": {
+      "id": "120140129",
+      "email": "contact@ediket.com"
+    },
+    "callback_email": "contact@ediket.com",
     "created_at": 1453880841,
     "revision": "This is a <del>bad</del><ins>good</ins> writing.",
     "comment": "It has now become a great writing!",
@@ -180,9 +184,7 @@ HTTP/1.1 201 CREATED
 Content-Type: application/json
 
 {
-  "data": {
-    "payload": "09810def-5ece-44a8-97e3-6a1c748eea62"
-  }
+  "payload": "09810def-5ece-44a8-97e3-6a1c748eea62"
 }
 ```
 
@@ -217,33 +219,6 @@ Content-Type: application/json
 | 404 | 404 | Resource not found |
 | 500 | 500 | Internal server error | Please contact contact@ediket.com |
 | 502 | 502 | Server is down for maintenance | Try again later |
-
-## Parse Content
-Ediket API is specialized in proofreading plain text with limited formats. When you upload request, your content will be parsed with unsupported html tags stripped. To check how content will be parsed before uploading the request and check word count, use the following endpoint.
-
-```
-POST /parse/ HTTP/1.1
-
-Host: api.ediket.com
-Content-Type: application/json
-Authorization: Bearer <TOKEN>
-
-{
-  "content": "<table>This is a bad writing.</table>"
-}
-```
-
-```
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-  "data": {
-    "filtered_content": "This is a bad writing.",
-    "word_count": 5
-  }
-}
-```
 
 ## Other Documentations
 
