@@ -1,5 +1,7 @@
-# Ediket API
+# Ediket API v0.1.0
 Bad writing goes in, good writing comes out. Let's find out how!
+
+Last updated: 2016-02-22
 
 ## Access Token
 In order to use Ediket API, you need to include `Token` on your request header. All communications use **application/json** Content-Type.
@@ -29,8 +31,9 @@ Authorization: Bearer <TOKEN>
   "category_purpose": "academic",
   "category_type": "email",
   "callback_url": "my_website.com/notify/when/complete/",
-  "client_id": "120140129",
+  "user_id": "120140129",
   "email": "contact@ediket.com",
+  "send_email": true,
   "custom_data": {
     "courseId": "BusinessWritingCourse#001",
     "lessonId": "Lesson#001",
@@ -48,8 +51,9 @@ Authorization: Bearer <TOKEN>
 | `category_purpose` | String | Purpose of the writing. Go to [Draft Documentation](/docs/draft.md) for possible options. <br/><br/>Default: `business` |
 | `category_type` | String | Type of the writing. Go to [Draft Documentation](/docs/draft.md) for possible options. <br/><br/>Default: `others` |
 | `callback_url` | String | URL for Callback when request is complete. See [Callback](#callback). |
-| `client_id` | String | The identification value of the client. See [Client](#client). |
-| `email` | String | Email is used for notification and authentication for accessing the complete request. See [Email](#email). <br/><br/>**Require `client_id`**|
+| `user_id` | String | The identification value of the user. See [User](#user). |
+| `email` | String | Email is used for authentication for accessing the request after it's complete. See [Email](#email). <br/><br/>**Require `user_id`**|
+| `send_email` | Boolean | Send notification to above email on complete. |
 | `custom_data` | Object | Additional custom data. It's serialized in our database. |
 
 
@@ -72,8 +76,9 @@ Content-Type: application/json
     "callback_url": "my_website.com/notify/when/complete/",
     "word_count": "5",
     "status": "waiting",
-    "client_id": "120140129",
+    "user_id": "120140129",
     "email": "contact@ediket.com",
+    "send_email": true,
     "custom_data": {
       "courseId": "BusinessWritingCourse#001",
       "lessonId": "Lesson#001",
@@ -105,8 +110,9 @@ Content-Type: application/json
     "callback_url": "my_website.com/notify/when/complete/",
     "word_count": "5",
     "status": "pending",
-    "client_id": "120140129",
+    "user_id": "120140129",
     "email": "contact@ediket.com",
+    "send_email": true,
     "custom_data": {
       "courseId": "BusinessWritingCourse#001",
       "lessonId": "Lesson#001",
@@ -127,20 +133,62 @@ Content-Type: application/json
 }
 ```
 
+## User
+Ownership of the request can be assigned to `user`. Here are the important caveats.
+
+- If `user_id` is not provided, the request is considered anonymous and only accessible through API.
+- If both `user_id` and `email` are provided, user will be created and assigned with `email` as an authentication id to Ediket Website.
+- If the user with `email` is already signed up to Ediket Website, the user will be associated to your API. This allows the user to make request both from Ediket Website and API. Transactions from the former route will not affect invoices from api calls.
+- If `user` exists with **different** `email`, the new `email` will only be used as a notification.
+
 ## Email
-Require `client_id` for email notification. Providing email serves two purposes.
-1. Ediket will send a notification email once the revision is complete.
-2. Owner of the email can access to the complete revision at Ediket Website. See [Client](#client).
+Email is primarily used to define ownership of the request and must be accompanied with `user_id`. If `send_email` is set as **true**, a notification will be sent to the email when revision is complete. The email contains a link to the complete request accessible at Ediket Website.
 
-Email notification contains a link to the complete request.
+## Authentication
+If you want to grant user an access to Ediket Website, simply generate an access payload through the auth endpoint.
 
-## Client
-Ownership of the request can be assigned to different `client`. Client API is currently work in progress. Here are the important caveats.
+- If `user_id` is not registered, it will create AND authenticate user. If `email` is provided, it will be assigned to the user as authentication id.
+- If `user_id` exists, it will ignore `email` and simply authenticate.
+- If user with `email` is already signed up to Ediket Website, the user will be associated to your API.
 
-- If `client_id` is not provided, the request is considered anonymous and only accessible through API.
-- If both `client_id` and `email` are provided, `client` will be created and assigned with `email` as authentication id to Ediket Website.
-- If user with `email` is registered to Ediket Website, the user will be associated to your API as `client`. This allows the user to make request both from Ediket Website and API. Transactions from the former route will not affect invoices from api calls.
-- If `client` exists with **different** `email`, the new `email` will only be used as a notification.
+> This is a temporary measure and will be replaced by official oauth specification in future.
+
+```
+POST /auth/ HTTP/1.1
+
+Host: api.ediket.com
+Content-Type: application/json
+Authorization: Bearer <TOKEN>
+
+{
+  "user_id": "120140129",
+  "email": "contact@ediket.com"
+}
+```
+
+### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| `user_id` | String | The identification value of the user. **Required** |
+| `email` | String | Email to associate if user is not registered yet. |
+
+### Response
+
+```
+HTTP/1.1 201 CREATED
+Content-Type: application/json
+
+{
+  "data": {
+    "payload": "09810def-5ece-44a8-97e3-6a1c748eea62"
+  }
+}
+```
+
+Use the payload to create a sign in link to Ediket Website. The link will be valid for the next 60 minutes.
+
+> https://ediket.com/signin?payload=&lt;payload&gt;
 
 ## Invoice
 The API Client will receive monthly invoice based on word count usage. Go to our [Pricing Page](https://ediket.com/pricing/) for pricing.
@@ -166,6 +214,7 @@ Content-Type: application/json
 | | 200 | Unknown error | Please contact contact@ediket.com |
 | | 201 | Quota exceed | Please contact contact@ediket.com |
 | 401 | 401 | Access token is invalid |
+| 404 | 404 | Resource not found |
 | 500 | 500 | Internal server error | Please contact contact@ediket.com |
 | 502 | 502 | Server is down for maintenance | Try again later |
 

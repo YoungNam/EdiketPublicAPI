@@ -1,4 +1,4 @@
-# Draft Object
+# Draft
 Draft is a proofreading request that contains original writing, revision, and editor info. The term `request` and `draft` are interchangeable.
 
 ## Endpoints
@@ -20,7 +20,7 @@ Draft is a proofreading request that contains original writing, revision, and ed
 | `category_purpose` | String | Purpose of the writing. See [Category](#category). |
 | `category_type` | String | Type of the writing. See [Category](#category). |
 | `callback_url` | String | URL for Callback when request is complete. |
-| `client_id` | String | The identification value of the client. |
+| `user_id` | String | The identification value of the user. |
 | `email` | String | Email is used for notification and authentication for accessing the complete request. |
 | `custom_data` | Object | Additional custom data. It's serialized in our database. |
 | `word_count` | Number | Number of word count. **Determines the pricing.** |
@@ -112,7 +112,7 @@ Authorization: Bearer <TOKEN>
   "category_purpose": "academic",
   "category_type": "email",
   "callback_url": "my_website.com/notify/when/complete/",
-  "client_id": "120140129",
+  "user_id": "120140129",
   "email": "contact@ediket.com",
   "custom_data": {
     "courseId": "BusinessWritingCourse#001",
@@ -151,7 +151,7 @@ Content-Type: application/json
     "callback_url": "my_website.com/notify/when/complete/",
     "word_count": "5",
     "status": "waiting",
-    "client_id": "120140129",
+    "user_id": "120140129",
     "email": "contact@ediket.com",
     "custom_data": {
       "courseId": "BusinessWritingCourse#001",
@@ -184,7 +184,7 @@ Content-Type: application/json
     "callback_url": "my_website.com/notify/when/complete/",
     "word_count": "5",
     "status": "pending",
-    "client_id": "120140129",
+    "user_id": "120140129",
     "email": "contact@ediket.com",
     "custom_data": {
       "courseId": "BusinessWritingCourse#001",
@@ -224,6 +224,6 @@ GET https://api.ediket.com/drafts/
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| client_id | String | Sort by client id
+| user_id | String | Sort by user id
 | offset | Number | A pagination offset. <br/><br/>Default: 0 |
 | limit | Number | A pagination limit. <br/><br/>Default: 10 |
